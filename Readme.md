@@ -8,7 +8,7 @@ Months later, awesome folks from [@DDDBE](https://twitter.com/dddbe) community p
 
 ## How it works
 
-You can define expectations on objects (e.g. API responses or expected events) by creating an instance of `seq.Map`.
+You can define expectations on objects (e.g. API responses or expected events) by creating an instance of `seq.Map`, which is provided by the package `github.com/abdullin/seq`.
 
 Maps can be nested or they could have flat paths. Values could be represented with strings, primitive types, instances of `seq.Map` or JSON-serializable objects.
 
@@ -120,3 +120,7 @@ Expected seating.back.arms to be '2' but got '3'
 Expected seating.right.name to be 'C3PO' but got 'C4PO'
 ```
 Check out the [unit tests](https://github.com/abdullin/seq/blob/master/seq_test.go) for more examples.
+
+## Feedback
+
+Feedback is welcome and appreciated!
