@@ -2,7 +2,7 @@ Structural equality library for Golang.
 
 ## Story
 
-While we were working on [HappyPancake](http://abdullin.com/happypancake/intro/) project, [Pieter](https://twitter.com/pjvds) always wanted to have a better assertion library for our event-driven specifications.
+While we were working on [HappyPancake](http://abdullin.com/happypancake/) project, [Pieter](https://twitter.com/pjvds) always wanted to have a better assertion library for our event-driven specifications.
 
 Months later, awesome folks from [@DDDBE](https://twitter.com/dddbe) community presented me with some Trappist Beer. Thanks to it (and some spare time on the weekend), this assertion library was finally written.
 
@@ -12,7 +12,23 @@ You can define expectations on objects (e.g. API responses or expected events) b
 
 Maps can be nested or they could have flat paths. Values could be represented with strings, primitive types, instances of `seq.Map` or JSON-serializable objects.
 
+Consider following types:
+
+```go
+type Robot struct {
+	Legs int    `json:"legs"`
+	Arms int    `json:"arms"`
+	Name string `json:"name"`
+}
+
+type Party struct {
+	Rating  []int             `json:"rating"`
+	Seating map[string]*Robot `json:"seating"`
+}
 ```
+Let's imagine that our JSON API returns `Party` object, which we want to verify. We could define our expectation like this:
+
+```go
   expect := seq.Map{
     // array
     "rating.len": 3,
@@ -34,11 +50,8 @@ Maps can be nested or they could have flat paths. Values could be represented wi
   }
 
 ```
-
 Once you have the expectation, you could compare it with an actual object. Here is an example of a valid object:
-
-
-```
+```go
   actual := &Party{
     Rating: []int{4, 5, 4},
     Seating: map[string]*Robot{
@@ -60,11 +73,22 @@ Once you have the expectation, you could compare it with an actual object. Here 
     },
   }
   result := expect.Test(actual)
+  
 ```
+Result value would contain `Diffs []string` with any differences and could be checked like this:
+
+```go
+if !result.Ok() {
+  fmt.Println("Differences")
+  for _, v := range result.Diffs {
+    fmt.Println(v)
+  }
+}
+```  
 
 If actual object has some invalid or missing properties, then result will have nice error messages. Consider this object:
 
-```
+```go
   actual := &Party{
     Seating: map[string]*Robot{
       "front": &Robot{
@@ -95,5 +119,4 @@ Expected rating[1] to be '5' but got nothing
 Expected seating.back.arms to be '2' but got '3'
 Expected seating.right.name to be 'C3PO' but got 'C4PO'
 ```
-Check out the unit tests for more examples.
-
+Check out the [unit tests](https://github.com/abdullin/seq/blob/master/seq_test.go) for more examples.
