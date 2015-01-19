@@ -19,7 +19,7 @@ func flatten(key string, x interface{}) map[string]string {
 	case string:
 		res[key] = vv
 	case []interface{}:
-		res[fmt.Sprintf("%s.len", key)] = strconv.Itoa(len(vv))
+		res[propertyPath(key, "length")] = strconv.Itoa(len(vv))
 		for ii, iv := range vv {
 			var prefix = fmt.Sprintf("%s[%v]", key, ii)
 			for ivk, ivv := range flatten(prefix, iv) {
