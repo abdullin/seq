@@ -3,11 +3,15 @@ package seq
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func propertyPath(key string, name string) string {
 	if key == "" {
 		return name
+	}
+	if strings.HasPrefix(name, "[") {
+		return key + name
 	}
 	return key + "." + name
 }

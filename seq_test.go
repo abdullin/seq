@@ -78,6 +78,33 @@ func TestSimpleArray(t *testing.T) {
 	expectOk(result, t)
 }
 
+func TestIndexSpecifierFolding(t *testing.T) {
+
+	type item struct {
+		Name string `json:"name"`
+	}
+	type dto struct {
+		Items []item `json:"items"`
+	}
+
+	actual := dto{
+		Items: []item{
+			item{Name: "this"},
+		},
+	}
+	expect := Map{
+		"items": Map{
+			"length": 1,
+			"[0]": Map{
+				"name": "this",
+			},
+		},
+	}
+	result := Test(expect, actual)
+	expectOk(result, t)
+
+}
+
 func TestExactComplexObject(t *testing.T) {
 	actual := &Party{
 		Rating: []int{4, 5, 4},
@@ -102,8 +129,8 @@ func TestExactComplexObject(t *testing.T) {
 
 	expect := Map{
 		// array
-		"rating.len": 3,
-		"rating[1]":  5,
+		"rating.length": 3,
+		"rating[1]":     5,
 		// flat path with value terminator
 		"seating.front.name": "R2D2",
 		"seating.front.arms": "1",
