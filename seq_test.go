@@ -168,7 +168,7 @@ func expectOk(result *Result, t *testing.T) {
 		return
 	}
 	t.Error("Test should pass")
-	for i, l := range result.Diffs {
+	for i, l := range result.Issues {
 		t.Log(i, l)
 	}
 }
@@ -179,7 +179,7 @@ func expectFail(result *Result, t *testing.T) {
 		return
 	}
 	t.Error("Test should fail")
-	for i, l := range result.Diffs {
+	for i, l := range result.Issues {
 		t.Log(i, l)
 	}
 }

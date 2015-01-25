@@ -19,13 +19,13 @@ func diff(expected, actual map[string]string) *Result {
 
 		if !ok {
 			if hasNestedObject(actual, ek) {
-				res.AddDiff(ek, ev, "{Object}")
+				res.AddIssue(ek, ev, "{Object}")
 			} else {
-				res.AddDiff(ek, ev, "nothing")
+				res.AddIssue(ek, ev, "nothing")
 			}
 
 		} else if av != ev {
-			res.AddDiff(ek, ev, av)
+			res.AddIssue(ek, ev, av)
 		}
 	}
 
