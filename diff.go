@@ -14,31 +14,28 @@ func hasNestedObject(actual map[string]string, key string) bool {
 	return false
 }
 
-func diff(expected, actual map[string]string) []string {
-	var res []string
+func diff(expected, actual map[string]string, groups Groups) *Result {
+	res := NewResult()
 
 	for ek, ev := range expected {
 		var av, ok = actual[ek]
-		var diff = ""
 
 		if !ok {
 			if hasNestedObject(actual, ek) {
-				diff = "{Object}"
+				res.AddDiff(ek, ev, "{Object}")
 			} else {
-				diff = "nothing"
+				res.AddDiff(ek, ev, "nothing")
 			}
 
 		} else if av != ev {
-			switch ev {
-			case "seq:ignore":
-				break
-			default:
-				diff = fmt.Sprintf("'%s'", av)
-			}
-		}
 
-		if diff != "" {
-			res = append(res, fmt.Sprintf("Expected %s to be '%v' but got %s", ek, ev, diff))
+			// we have some match in groups
+			if group, ok := groups[ev]; ok {
+				res.Capture(group, ek, av)
+			} else {
+				res.AddDiff(ek, ev, fmt.Sprintf("'%s'", av))
+			}
+
 		}
 	}
 

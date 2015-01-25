@@ -3,21 +3,20 @@ package seq
 import "fmt"
 
 func Test(expected, actual interface{}) *Result {
+	return TestEx(expected, actual, nil)
+}
+
+type Groups map[interface{}]string
+
+func TestEx(expected, actual interface{}, groups Groups) *Result {
+
 	eMap := flatten("", objectToMap(expected))
 	aMap := flatten("", objectToMap(actual))
-	//fmt.Println("expected")
-	//debug(expected)
-	//fmt.Println("actual")
-	//debug(actual)
-	diffs := diff(eMap, aMap)
-	return &Result{diffs}
+	result := diff(eMap, aMap, groups)
+	return result
 }
 
 type Map map[string]interface{}
-
-type Result struct {
-	Diffs []string
-}
 
 func (r *Result) Ok() bool {
 	return len(r.Diffs) == 0

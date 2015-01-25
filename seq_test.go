@@ -3,14 +3,24 @@ package seq
 import "testing"
 
 type Robot struct {
-	Legs int    `json:"legs"`
-	Arms int    `json:"arms"`
-	Name string `json:"name"`
+	Legs      int    `json:"legs"`
+	Arms      int    `json:"arms"`
+	Name      string `json:"name"`
+	LikesGold bool   `json:"likesGold"`
 }
 
 type Party struct {
 	Rating  []int             `json:"rating"`
 	Seating map[string]*Robot `json:"seating"`
+}
+
+func TestBool(t *testing.T) {
+	type dto struct {
+		Boolean bool `json:"boolean"`
+	}
+
+	result := Test(Map{"boolean": true}, &dto{true})
+	expectOk(result, t)
 }
 
 func TestPartialSimpleObject(t *testing.T) {
@@ -29,15 +39,17 @@ func TestPartialSimpleObject(t *testing.T) {
 
 func TestExactSimpleObject(t *testing.T) {
 	expect := Map{
-		"legs": 2,
-		"arms": 2,
-		"name": "benny",
+		"legs":      2,
+		"arms":      2,
+		"name":      "benny",
+		"likesGold": false,
 	}
 
 	actual := Robot{
-		Legs: 2,
-		Arms: 2,
-		Name: "benny",
+		Legs:      2,
+		Arms:      2,
+		Name:      "benny",
+		LikesGold: false,
 	}
 
 	result := expect.Test(actual)
@@ -52,9 +64,10 @@ func TestWrongSimpleObject(t *testing.T) {
 	}
 
 	actual := Robot{
-		Legs: 2,
-		Arms: 2,
-		Name: "Bender",
+		Legs:      2,
+		Arms:      2,
+		Name:      "Bender",
+		LikesGold: true,
 	}
 
 	result := expect.Test(actual)
