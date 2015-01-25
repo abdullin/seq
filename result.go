@@ -3,29 +3,31 @@ package seq
 import "fmt"
 
 type Result struct {
-	Diffs []string
+	Diffs []Diff
+}
 
-	Captures map[string][]Capture
+type Diff struct {
+	Path          string
+	ExpectedValue string
+	ActualValue   string
+}
+
+func (r *Result) Ok() bool {
+	return len(r.Diffs) == 0
+}
+
+func (d *Diff) String() string {
+	return fmt.Sprintf("Expected %s to be '%v' but got %s",
+		d.Path,
+		d.ExpectedValue,
+		d.ExpectedValue,
+	)
 }
 
 func NewResult() *Result {
-	return &Result{
-		Captures: map[string][]Capture{},
-	}
-}
-
-type Capture struct {
-	Path   string
-	Actual string
-}
-
-func (r *Result) Capture(group, key, actual string) {
-	r.Captures[group] = append(r.Captures[group], Capture{key, actual})
+	return &Result{}
 }
 
 func (r *Result) AddDiff(key, expected, actual string) {
-
-	var res = fmt.Sprintf("Expected %s to be '%v' but got %s", key, expected, actual)
-	r.Diffs = append(r.Diffs, res)
-
+	r.Diffs = append(r.Diffs, Diff{key, expected, actual})
 }

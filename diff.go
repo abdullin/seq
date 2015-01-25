@@ -1,9 +1,6 @@
 package seq
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 func hasNestedObject(actual map[string]string, key string) bool {
 	for k, _ := range actual {
@@ -14,7 +11,7 @@ func hasNestedObject(actual map[string]string, key string) bool {
 	return false
 }
 
-func diff(expected, actual map[string]string, groups Groups) *Result {
+func diff(expected, actual map[string]string) *Result {
 	res := NewResult()
 
 	for ek, ev := range expected {
@@ -28,14 +25,7 @@ func diff(expected, actual map[string]string, groups Groups) *Result {
 			}
 
 		} else if av != ev {
-
-			// we have some match in groups
-			if group, ok := groups[ev]; ok {
-				res.Capture(group, ek, av)
-			} else {
-				res.AddDiff(ek, ev, fmt.Sprintf("'%s'", av))
-			}
-
+			res.AddDiff(ek, ev, av)
 		}
 	}
 
