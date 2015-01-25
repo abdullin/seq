@@ -16,14 +16,14 @@ Consider following types:
 
 ```go
 type Robot struct {
-	Legs int    `json:"legs"`
-	Arms int    `json:"arms"`
-	Name string `json:"name"`
+    Legs int    `json:"legs"`
+    Arms int    `json:"arms"`
+    Name string `json:"name"`
 }
 
 type Party struct {
-	Rating  []int             `json:"rating"`
-	Seating map[string]*Robot `json:"seating"`
+    Rating  []int             `json:"rating"`
+    Seating map[string]*Robot `json:"seating"`
 }
 ```
 Let's imagine that our JSON API returns `Party` object, which we want to verify. We could define our expectation like this:
@@ -73,18 +73,18 @@ Once you have the expectation, you could compare it with an actual object. Here 
     },
   }
   result := expect.Test(actual)
-  
+
 ```
-Result value would contain `Diffs []string` with any differences and could be checked like this:
+Result value would contain `Issues []seq.Issue` with any differences and could be checked like this:
 
 ```go
 if !result.Ok() {
   fmt.Println("Differences")
-  for _, v := range result.Diffs {
-    fmt.Println(v)
+  for _, v := range result.Issues {
+    fmt.Println(v.String())
   }
 }
-```  
+```
 
 If actual object has some invalid or missing properties, then result will have nice error messages. Consider this object:
 
@@ -109,7 +109,7 @@ If actual object has some invalid or missing properties, then result will have n
 
 ```
 
-If verified against the original expectation, `result.Diffs` would contain these error messages:
+If verified against the original expectation, `result.Issues` would contain these error messages:
 
 ```
 Expected rating.len to be '3' but got nothing
