@@ -2,11 +2,17 @@ package seq
 
 import "testing"
 
+type CPU struct {
+	Brand string `json:"brand"`
+	Model string `json:"model"`
+}
+
 type Robot struct {
 	Legs      int    `json:"legs"`
 	Arms      int    `json:"arms"`
 	Name      string `json:"name"`
 	LikesGold bool   `json:"likesGold"`
+	CPU       CPU    `json:"cpu"`
 }
 
 type Party struct {
@@ -20,6 +26,23 @@ func TestBool(t *testing.T) {
 	}
 
 	result := Test(Map{"boolean": true}, &dto{true})
+	expectOk(result, t)
+}
+
+func TestNestedObject(t *testing.T) {
+	expect := Map{
+		"cpu.brand": "intel",
+	}
+
+	actual := Robot{
+		Legs: 2,
+		Arms: 2,
+		CPU: CPU{
+			Brand: "intel",
+		},
+	}
+
+	result := expect.Test(actual)
 	expectOk(result, t)
 }
 
